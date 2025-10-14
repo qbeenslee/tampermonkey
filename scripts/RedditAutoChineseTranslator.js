@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         RedditAutoChineseTranslator
 // @name:zh-CN   Reddit自动中文翻译
-// @namespace    http://tampermonkey.net/
-// @version      2.0
+// @namespace    https://greasyfork.org/zh-CN/scripts/552523-redditautochinesetranslator
+// @version      2.0.1
 // @description  自动将Reddit页面跳转到中文翻译版本，通过添加tl=zh-hans参数。支持开关控制，智能检测页面是否支持翻译。
 // @license      MIT
 // @author       Qbeenslee
