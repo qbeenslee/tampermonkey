@@ -6,7 +6,7 @@
 // @description  自动将Reddit页面跳转到中文翻译版本，通过添加tl=zh-hans参数。支持开关控制，智能检测页面是否支持翻译。
 // @license      MIT
 // @author       Qbeenslee
-// @copyright    Qbeenslee
+// @copyright    Qbeenslee.com 
 // @match        https://www.reddit.com/r/*/comments/*
 // @exclude      https://www.reddit.com/login*
 // @exclude      https://www.reddit.com/register*
