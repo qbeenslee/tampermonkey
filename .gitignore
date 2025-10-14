@@ -1,0 +1,12 @@
+public/
+node_modules/
+resources/
+node_modules/
+themes/*
+dist/
+rev/
+.vscode/
+.DS_Store
+.hugo_build.lock
+tags
+
