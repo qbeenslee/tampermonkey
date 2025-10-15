@@ -29,7 +29,7 @@
 	// ==================== 配置常量 ====================
 	const CONFIG = {
 		AUTO_TRANSLATE_KEY: 'autoChineseTranslateEnabled', // 本地存储键名
-		CONTAINER_CLASS: 'auto-translate-container',       // 按钮容器类名
+		CONTAINER_CLASS: 'rat-auto-translate-container',   // 按钮容器类名
 		DEBOUNCE_DELAY: 100,                               // 防抖延迟（毫秒）
 		// 已是中文的subreddit列表（无需翻译）
 		CHINESE_SUBREDDITS: [
@@ -94,7 +94,7 @@
 	// ==================== 样式注入 ====================
 	// 添加CSS样式
 	GM_addStyle(`
-		.auto-translate-container {
+		.rat-auto-translate-container {
 			display: flex;
 			align-items: center;
 			margin-left: 6em;
@@ -102,27 +102,27 @@
 			gap: 8px;
 		}
 
-		.auto-translate-label {
+		.rat-auto-translate-label {
 			font-size: 14px;
 			font-weight: 500;
 			color: var(--newCommunityTheme-bodyText);
 			white-space: nowrap;
 		}
 
-		.auto-translate-switch {
+		.rat-auto-translate-switch {
 			position: relative;
 			display: inline-block;
 			width: 51px;
 			height: 31px;
 		}
 
-		.auto-translate-switch input {
+		.rat-auto-translate-switch input {
 			opacity: 0;
 			width: 0;
 			height: 0;
 		}
 
-		.auto-translate-slider {
+		.rat-auto-translate-slider {
 			position: absolute;
 			cursor: pointer;
 			top: 0;
@@ -134,7 +134,7 @@
 			border-radius: 34px;
 		}
 
-		.auto-translate-slider:before {
+		.rat-auto-translate-slider:before {
 			position: absolute;
 			content: "";
 			height: 27px;
@@ -147,24 +147,24 @@
 			box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 		}
 
-		input:checked + .auto-translate-slider {
+		input:checked + .rat-auto-translate-slider {
 			background-color: #4CD964;
 		}
 
-		input:checked + .auto-translate-slider:before {
+		input:checked + .rat-auto-translate-slider:before {
 			transform: translateX(20px);
 		}
 
 		/* 禁用状态 */
-		.auto-translate-container.disabled {
+		.rat-auto-translate-container.rat-disabled {
 			opacity: 0.5;
 		}
 
-		.auto-translate-container.disabled .auto-translate-slider {
+		.rat-auto-translate-container.rat-disabled .rat-auto-translate-slider {
 			cursor: not-allowed;
 		}
 
-		.auto-translate-container.disabled input {
+		.rat-auto-translate-container.rat-disabled input {
 			pointer-events: none;
 		}
 	`);
@@ -273,18 +273,18 @@
 
 		// 创建标签
 		const label = document.createElement('span');
-		label.className = 'auto-translate-label';
+		label.className = 'rat-auto-translate-label';
 		label.textContent = '自动翻译';
 
 		// 创建Switch开关
 		const switchContainer = document.createElement('label');
-		switchContainer.className = 'auto-translate-switch';
+		switchContainer.className = 'rat-auto-translate-switch';
 
 		const checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
 
 		const slider = document.createElement('span');
-		slider.className = 'auto-translate-slider';
+		slider.className = 'rat-auto-translate-slider';
 
 		// 组装Switch
 		switchContainer.append(checkbox);
@@ -307,7 +307,7 @@
 	// 设置按钮为禁用状态
 	function setButtonDisabled(container, checkbox, label) {
 		checkbox.checked = false;
-		container.classList.add('disabled');
+		container.classList.add('rat-disabled');
 		label.textContent = '无法翻译';
 		// 注意：这里不自动关闭autoTranslateEnabled，让用户知道他们确实开启了自动翻译
 		// 只是当前页面不支持翻译而已
@@ -318,7 +318,7 @@
 		// 检查是否是中文subreddit
 		if (urlManager.isChineseSubreddit()) {
 			checkbox.checked = false;
-			container.classList.add('disabled');
+			container.classList.add('rat-disabled');
 			label.textContent = '已是中文';
 			return;
 		}
@@ -327,11 +327,11 @@
 			if (urlManager.hasTranslation()) {
 				// 开启状态：当前已在翻译页面
 				checkbox.checked = true;
-				container.classList.remove('disabled');
+				container.classList.remove('rat-disabled');
 				label.textContent = '自动翻译';
 			} else {
 				// 检查翻译可用性
-				container.classList.add('disabled');
+				container.classList.add('rat-disabled');
 				label.textContent = '检查中...';
 
 				checkTranslationAvailable(hasTranslation => {
@@ -349,7 +349,7 @@
 		} else {
 			// 关闭状态
 			checkbox.checked = false;
-			container.classList.remove('disabled');
+			container.classList.remove('rat-disabled');
 			label.textContent = '自动翻译';
 		}
 	}
