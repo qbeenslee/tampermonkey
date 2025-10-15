@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         RedditAutoChineseTranslator
+// @name         Reddit自动中文翻译
 // @name:zh-CN   Reddit自动中文翻译
 // @namespace    https://greasyfork.org/zh-CN/scripts/552523-redditautochinesetranslator
-// @version      2.0.1
+// @version      2.0.3
 // @description  自动将Reddit页面跳转到中文翻译版本，通过添加tl=zh-hans参数。支持开关控制，智能检测页面是否支持翻译。
 // @license      MIT
 // @author       Qbeenslee
@@ -31,6 +31,11 @@
 		AUTO_TRANSLATE_KEY: 'autoChineseTranslateEnabled', // 本地存储键名
 		CONTAINER_CLASS: 'auto-translate-container',       // 按钮容器类名
 		DEBOUNCE_DELAY: 100,                               // 防抖延迟（毫秒）
+		// 已是中文的subreddit列表（无需翻译）
+		CHINESE_SUBREDDITS: [
+			'China_irl',
+			// 可以继续添加其他中文subreddit
+		],
 	};
 
 	// ==================== 状态管理 ====================
@@ -39,6 +44,14 @@
 
 	// ==================== URL管理工具 ====================
 	const urlManager = {
+		// 检查当前是否在中文subreddit中
+		isChineseSubreddit() {
+			const match = globalThis.location.pathname.match(/^\/r\/([^/]+)\//);
+			if (!match) return false;
+			const subredditName = match[1];
+			return CONFIG.CHINESE_SUBREDDITS.includes(subredditName);
+		},
+
 		// 检查URL是否有show=original参数
 		hasShowOriginal() {
 			return new URLSearchParams(globalThis.location.search).has('show');
@@ -302,6 +315,14 @@
 
 	// 更新按钮状态
 	function updateButtonState(container, checkbox, label) {
+		// 检查是否是中文subreddit
+		if (urlManager.isChineseSubreddit()) {
+			checkbox.checked = false;
+			container.classList.add('disabled');
+			label.textContent = '已是中文';
+			return;
+		}
+
 		if (autoTranslateEnabled) {
 			if (urlManager.hasTranslation()) {
 				// 开启状态：当前已在翻译页面
@@ -336,6 +357,12 @@
 	// 设置事件监听
 	function setupEventListeners(container, checkbox, label) {
 		checkbox.addEventListener('change', function () {
+			// 如果是中文subreddit，不处理切换
+			if (urlManager.isChineseSubreddit()) {
+				this.checked = false;
+				return;
+			}
+
 			if (this.checked) {
 				// 切换到开启
 				console.log('切换到开启状态');
