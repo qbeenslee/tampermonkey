@@ -139,7 +139,7 @@
 			display: inline-block;
 			width: 51px;
 			height: 31px;
-		Halloween}
+		}
 
 		.rat-auto-translate-switch input {
 			opacity: 0;
