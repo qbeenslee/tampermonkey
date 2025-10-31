@@ -2,12 +2,12 @@
 // @name         Reddit自动中文翻译
 // @name:zh-CN   Reddit自动中文翻译
 // @namespace    https://greasyfork.org/zh-CN/scripts/552523-redditautochinesetranslator
-// @version      2.0.5
+// @version      2.0.6
 // @description  自动将Reddit页面跳转到中文翻译版本，通过添加tl=zh-hans参数。支持开关控制，智能检测页面是否支持翻译。
 // @license      MIT
 // @author       Qbeenslee
 // @copyright    Qbeenslee.com
-// @match        https://www.reddit.com/r/*/comments/*
+// @match        https://www.reddit.com/*
 // @exclude      https://www.reddit.com/login*
 // @exclude      https://www.reddit.com/register*
 // @connect      www.reddit.com
@@ -29,8 +29,8 @@
 	// ==================== 配置常量 ====================
 	const CONFIG = {
 		AUTO_TRANSLATE_KEY: 'autoChineseTranslateEnabled', // 本地存储键名
-		CONTAINER_CLASS: 'rat-auto-translate-container',   // 按钮容器类名
-		DEBOUNCE_DELAY: 100,                               // 防抖延迟（毫秒）
+		CONTAINER_CLASS: 'rat-auto-translate-container', // 按钮容器类名
+		DEBOUNCE_DELAY: 100, // 防抖延迟（毫秒）
 		// 已是中文的subreddit列表（无需翻译）
 		CHINESE_SUBREDDITS: [
 			'China_irl',
@@ -39,7 +39,7 @@
 			'dashuju',
 			'Chinatown_irl',
 			'taiwanica',
-			'China_teahouse'
+			'China_teahouse',
 			// 可以继续添加其他中文subreddit
 		],
 	};
@@ -50,10 +50,29 @@
 
 	// ==================== URL管理工具 ====================
 	const urlManager = {
+		// 检查当前是否在列表页（首页或subreddit列表页）
+		isListPage() {
+			const {pathname} = globalThis.location;
+			// 首页
+			if (pathname === '/' || pathname === '') {
+				return true;
+			}
+
+			// Subreddit列表页（不包含帖子详情页）
+			if (/^\/r\/[^/]+(\/)?$/.test(pathname)) {
+				return true;
+			}
+
+			return false;
+		},
+
 		// 检查当前是否在中文subreddit中
 		isChineseSubreddit() {
 			const match = globalThis.location.pathname.match(/^\/r\/([^/]+)\//);
-			if (!match) return false;
+			if (!match) {
+				return false;
+			}
+
 			const subredditName = match[1];
 			return CONFIG.CHINESE_SUBREDDITS.includes(subredditName);
 		},
@@ -321,6 +340,14 @@
 
 	// 更新按钮状态
 	function updateButtonState(container, checkbox, label) {
+		// 检查是否是列表页
+		if (urlManager.isListPage()) {
+			checkbox.checked = false;
+			container.classList.add('rat-disabled');
+			label.textContent = '不翻译列表页';
+			return;
+		}
+
 		// 检查是否是中文subreddit
 		if (urlManager.isChineseSubreddit()) {
 			checkbox.checked = false;
@@ -365,6 +392,12 @@
 		checkbox.addEventListener('change', function () {
 			// 如果是中文subreddit，不处理切换
 			if (urlManager.isChineseSubreddit()) {
+				this.checked = false;
+				return;
+			}
+
+			// 如果是列表页，不处理切换
+			if (urlManager.isListPage()) {
 				this.checked = false;
 				return;
 			}
@@ -457,4 +490,3 @@
 		init();
 	}
 })();
-
