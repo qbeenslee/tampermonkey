@@ -34,7 +34,12 @@
 		// 已是中文的subreddit列表（无需翻译）
 		CHINESE_SUBREDDITS: [
 			'China_irl',
-			'weibo_read'
+			'weibo_read',
+			'USstocks2discuss',
+			'dashuju',
+			'Chinatown_irl',
+			'taiwanica',
+			'China_teahouse'
 			// 可以继续添加其他中文subreddit
 		],
 	};
