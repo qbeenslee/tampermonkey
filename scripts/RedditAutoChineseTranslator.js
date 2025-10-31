@@ -139,7 +139,7 @@
 			display: inline-block;
 			width: 51px;
 			height: 31px;
-		}
+		Halloween}
 
 		.rat-auto-translate-switch input {
 			opacity: 0;
@@ -344,7 +344,7 @@
 		if (urlManager.isListPage()) {
 			checkbox.checked = false;
 			container.classList.add('rat-disabled');
-			label.textContent = '不翻译列表页';
+			label.textContent = '不翻译该页面';
 			return;
 		}
 
